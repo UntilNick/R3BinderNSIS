@@ -1,0 +1,149 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <LangVersion>latest</LangVersion>
+    <ProjectGuid>{E8A6CA97-21B2-4A22-8ED2-7D46F51540FA}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>R3BinderTools</RootNamespace>
+    <AssemblyName>R3BinderTools</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>R3BinderTools.Program</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Main\r3binder.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Compilation\CodeDOMPro\MultiFrmPro.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Compilation\CodeDOMPro\MultiFrmPro.Designer.cs">
+      <DependentUpon>MultiFrmPro.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Compilation\CodeDOM\BuildDom.cs" />
+    <Compile Include="Compilation\CodeDOM\MultiBinderFrm.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Compilation\CodeDOM\MultiBinderFrm.Designer.cs">
+      <DependentUpon>MultiBinderFrm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Compilation\CodeDOM\SourceEditor.cs" />
+    <Compile Include="Compilation\NSIS\GetInstall.cs" />
+    <Compile Include="Compilation\NSIS\NsiBuild.cs" />
+    <Compile Include="Compilation\NSIS\NsisBinderFrm.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Compilation\NSIS\NsisBinderFrm.Designer.cs">
+      <DependentUpon>NsisBinderFrm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Compilation\NSIS\ScriptGen.cs" />
+    <Compile Include="Compilation\NSIS\ScriptRun.cs" />
+    <Compile Include="Design\BindButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Design\BindButton.Designer.cs">
+      <DependentUpon>BindButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Design\BinderBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Design\GraphBox.cs" />
+    <Compile Include="Design\MenuPalette.cs" />
+    <Compile Include="GenTools\GenString.cs" />
+    <Compile Include="GenTools\GenX.cs" />
+    <Compile Include="GenTools\GetFileSize.cs" />
+    <Compile Include="GenTools\RndShuffle.cs" />
+    <Compile Include="Helpers\ControlActive.cs" />
+    <Compile Include="Helpers\Enums.cs" />
+    <Compile Include="Helpers\GlobalPath.cs" />
+    <Compile Include="Helpers\MusicPlay.cs" />
+    <Compile Include="Helpers\MutEx.cs" />
+    <Compile Include="Helpers\NativeMethods.cs" />
+    <Compile Include="Main\BindFrm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main\BindFrm.Designer.cs">
+      <DependentUpon>BindFrm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Main\Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Compilation\CodeDOMPro\MultiFrmPro.resx">
+      <DependentUpon>MultiFrmPro.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Compilation\CodeDOM\MultiBinderFrm.resx">
+      <DependentUpon>MultiBinderFrm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Compilation\NSIS\NsisBinderFrm.resx">
+      <DependentUpon>NsisBinderFrm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main\BindFrm.resx">
+      <DependentUpon>BindFrm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="Resources\app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <None Include="Resources\app.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Main\App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Main\r3binder.ico" />
+    <None Include="Resources\NewBuild.txt" />
+    <None Include="Resources\GoodBuild.wav" />
+    <None Include="Resources\Error_Build.wav" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
